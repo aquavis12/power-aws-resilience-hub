@@ -92,6 +92,6 @@ Add a hook to `.kiro/hooks/resilience-assessment.kiro.hook`:
 ## License and support
 This power is licensed under MIT (SPDX: `MIT`). It integrates with the AWS MCP Server (`mcp-proxy-for-aws`, SPDX: `Apache-2.0`), a managed AWS service.
 - [Privacy Policy](https://aws.amazon.com/privacy/)
-- [Support](https://github.com/aquavis12/power-aws-resilience-hub/issues)
+- [Support](mailto:rachapudivishnu9@gmail.com) (rachapudivishnu9@gmail.com) · [GitHub Issues](https://github.com/aquavis12/power-aws-resilience-hub/issues)
 - Author: Venkata Pavan Vishnu Rachapudi — AWS Community Builder (Security)
 
