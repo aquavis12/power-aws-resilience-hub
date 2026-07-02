@@ -89,3 +89,9 @@ Add a hook to `.kiro/hooks/resilience-assessment.kiro.hook`:
 - Assessment stuck / empty results → dependency discovery runs asynchronously; poll assessment status until COMPLETED before reading results.
 - ARC routing-control change has no effect → confirm you targeted the **data plane** endpoint (region-specific), not the control plane. See `steering/arc-failover.md`.
 
+## License and support
+This power is licensed under MIT (SPDX: `MIT`). It integrates with the AWS MCP Server (`mcp-proxy-for-aws`, SPDX: `Apache-2.0`), a managed AWS service.
+- [Privacy Policy](https://aws.amazon.com/privacy/)
+- [Support](https://github.com/aquavis12/power-aws-resilience-hub/issues)
+- Author: Venkata Pavan Vishnu Rachapudi — AWS Community Builder (Security)
+

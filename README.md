@@ -2,9 +2,15 @@
 
 A Kiro Power that lets your agent assess, improve, and govern AWS application resilience directly from the IDE — powered by the **next-generation AWS Resilience Hub** (GA May 2026) via the managed AWS MCP Server.
 
-[![Add to Kiro](https://img.shields.io/badge/Add%20to-Kiro-8B5CF6?style=for-the-badge&logo=amazon-aws&logoColor=white)](https://kiro.dev/powers/import?repo=https://github.com/aquavis12/power-aws-resilience-hub)
+## Install in Kiro
 
-> One-click install: click **Add to Kiro** above, or in the IDE go to Powers → Add Custom Power → Import from GitHub and paste the repo URL.
+**Kiro → Powers panel → Add Custom Power → Import power from GitHub**, then paste:
+
+```
+https://github.com/aquavis12/power-aws-resilience-hub
+```
+
+Kiro reads `POWER.md` + `mcp.json` and installs the power automatically. Activate it by using keywords like *"resilience", "RTO/RPO", "failover", "zonal shift", "disaster recovery"* in a conversation.
 
 It's an **umbrella power**: Resilience Hub is the assessment engine, and it folds in the two capabilities it works with —
 - **Amazon Application Recovery Controller (ARC)** — the failover *fix* (zonal shift, routing controls, Region switch)
