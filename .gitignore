@@ -1,0 +1,14 @@
+# Kiro workspace state (generated per-user, not part of the power)
+.kiro/
+resilience-context/
+
+# OS / editor cruft
+.DS_Store
+Thumbs.db
+*.swp
+.vscode/
+.idea/
+
+# Local env / secrets
+.env
+*.local

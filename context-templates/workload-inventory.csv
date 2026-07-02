@@ -1,0 +1,2 @@
+workload_name,environment,primary_region,dr_region,owner_team,owner_email,business_tier,dr_strategy_tier
+<app-name>,prod,us-east-1,us-west-2,<team>,<email>,critical,Warm Standby
