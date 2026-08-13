@@ -1,14 +1,20 @@
 ---
 name: "aws-resilience-hub"
-displayName: "AWS Resilience Hub (next-gen)"
-description: "Assess, improve, and govern the resilience of AWS applications from your IDE — next-gen Resilience Hub GenAI failure-mode assessments, dependency discovery, RTO/RPO policy validation, Amazon Application Recovery Controller (ARC) failover orchestration, and AWS Well-Architected Reliability-pillar guidance — via the managed AWS MCP Server."
-keywords: ["resilience", "resilience hub", "disaster recovery", "dr", "rto", "rpo", "failover", "arc", "application recovery controller", "zonal shift", "routing control", "reliability", "well-architected", "high availability", "resiliency", "failure mode"]
+displayName: "AWS Resilience Hub"
+description: "Assess, improve, and govern the resilience of AWS applications from your IDE — next-gen Resilience Hub GenAI failure-mode assessments, dependency discovery, RTO/RPO policy validation, structured remediation reporting, Amazon Application Recovery Controller (ARC) failover orchestration, and AWS Well-Architected Reliability-pillar guidance — powered by the managed AWS MCP Server with integrated AWS Documentation and re:Post knowledge."
+keywords: ["resilience", "resilience hub", "disaster recovery", "dr", "rto", "rpo", "failover", "arc", "application recovery controller", "zonal shift", "routing control", "reliability", "well-architected", "high availability", "resiliency", "failure mode", "backup", "recovery", "report", "assessment", "remediation", "pitr", "multi-az", "cross-region"]
 author: "Venkata Pavan Vishnu Rachapudi"
 ---
 
 # AWS Resilience Hub Power
 
-This power lets the Kiro agent operate **next-generation AWS Resilience Hub** (GA May 2026) — AWS's service for proactively assessing and improving application resilience — through the managed **AWS MCP Server** (`aws-mcp`). It folds in two closely-related capabilities:
+This power lets the Kiro agent operate **next-generation AWS Resilience Hub** (GA May 2026) — AWS's service for proactively assessing and improving application resilience — through three integrated MCP servers:
+
+- **aws-mcp** — The managed AWS MCP Server for all Resilience Hub, ARC, and AWS service API calls (SigV4 authenticated).
+- **aws-docs** — AWS Documentation MCP Server for pulling authoritative service docs, best-practice guides, and remediation references.
+- **aws-repost** — AWS re:Post MCP Server for searching community solutions, known issues, and real-world implementation patterns.
+
+It folds in two closely-related capabilities:
 
 - **Amazon Application Recovery Controller (ARC)** — the *fix* Resilience Hub recommends for failover: zonal shift, routing controls, and Region switch.
 - **AWS Well-Architected Reliability pillar** — the *standard* Resilience Hub assesses against.
@@ -20,7 +26,8 @@ This power lets the Kiro agent operate **next-generation AWS Resilience Hub** (G
 3. **Data plane over control plane during recovery**: Per Well-Architected REL11-BP04, recovery actions must rely on the **data plane** (ARC routing-control data plane, Route 53 health checks), not control-plane APIs. Never recommend a recovery path that depends on a control-plane operation succeeding during an impairment.
 4. **Discover, don't assume**: Next-gen Resilience Hub is newly GA and its API surface differs from the legacy hub. Before the first Resilience Hub operation in a session, discover the actual operation names via the `aws-mcp` tools. NEVER invent operation names — verify, then call.
 5. **RTO/RPO are contractual**: Always express resilience targets as explicit RTO (recovery time) and RPO (data loss) numbers tied to a DR strategy tier. Never hand-wave "highly available" — map it to a tier (see `context-templates/rto-rpo-targets.md`).
-6. **One MCP server**: Use only `aws-mcp`. Do NOT add the legacy `aws-api-mcp-server` or `aws-knowledge-mcp-server` alongside it — AWS recommends removing them to avoid tool conflicts.
+6. **Enrich with documentation**: Use `aws-docs` to pull authoritative AWS documentation for remediation guidance and `aws-repost` for community-validated solutions. Never invent guidance — cite sources.
+7. **MCP server usage**: Use `aws-mcp` for all AWS API operations. Use `aws-docs` for documentation lookups. Use `aws-repost` for community knowledge. Do NOT add legacy servers (`aws-api-mcp-server`, `aws-knowledge-mcp-server`) — they conflict.
 
 ## Onboarding
 
@@ -49,24 +56,50 @@ This power does NOT hardcode a region. The `aws-mcp` proxy inherits the region f
 
 ## Skills
 
-This power provides three skills:
+This power provides four skills:
 
 - **assess** — Run a full Resilience Hub assessment for a single application: validate session, discover operations, onboard or select an app, run assessment, and report results as a structured table with WAF best-practice IDs.
 - **account-scan** — Perform an account-wide resilience assessment across all (or selected) regions: discover all registered apps, assess each, flag unregistered workloads, and produce an aggregated posture report.
 - **failover** — Orchestrate ARC failover with safety guardrails: zonal shift, routing controls, or Region switch with explicit user confirmation.
+- **report** — Generate a structured remediation report from an existing assessment: executive summary, per-component findings, cost-quantified recommendations, operational gaps (alarms/SOPs/FIS), and a prioritized roadmap — enriched with AWS documentation and re:Post community solutions.
+
+## MCP Server Usage
+
+### aws-mcp (primary)
+All AWS API operations: Resilience Hub service calls, ARC/Route 53 recovery-controller calls, STS identity checks, read-only inspection of assessed resources, AWS Backup, DRS, and other service APIs.
+
+### aws-docs (documentation)
+Pull authoritative AWS documentation for:
+- Service-specific remediation guidance (e.g., "how to enable PITR on DynamoDB")
+- Well-Architected best-practice references
+- Console navigation paths
+- CLI/API reference for recommended actions
+- Pricing and feature comparison pages
+
+### aws-repost (community knowledge)
+Search for:
+- Community-validated solutions for specific resilience patterns
+- Known issues and workarounds with AWS services
+- Real-world implementation experiences and gotchas
+- Troubleshooting guides from practitioners
 
 ## Best Practices
 
 ### Tool usage
 
-- All operations go through the `aws-mcp` server tools: Resilience Hub service calls, ARC/Route 53 recovery-controller calls, STS identity checks, and read-only inspection of assessed resources.
-- Prefer next-gen Resilience Hub for: dependency discovery, GenAI failure-mode assessments, modular resilience policies, and organization-wide reporting. Use direct service calls only for quick ad-hoc checks.
+- All AWS API operations go through `aws-mcp`.
+- Use `aws-docs` to back up every recommendation with authoritative documentation links.
+- Use `aws-repost` to surface community patterns and known pitfalls before recommending a remediation path.
+- Prefer next-gen Resilience Hub for: dependency discovery, GenAI failure-mode assessments, modular resilience policies, and organization-wide reporting.
 - Wire assessments into CI/CD as a gate (fail the pipeline if assessed RTO/RPO regresses below policy).
 
 ### Reporting conventions
 
-- Every recommendation must name: (1) the DR strategy tier, (2) the target RTO/RPO, (3) the remediating service (ARC / DRS / Backup), and (4) the Well-Architected Reliability best-practice ID it satisfies (e.g. REL11-BP04).
+- Every recommendation must name: (1) the DR strategy tier, (2) the target RTO/RPO, (3) the remediating service (ARC / DRS / Backup), (4) the Well-Architected Reliability best-practice ID it satisfies (e.g. REL11-BP04), and (5) estimated monthly cost where available.
 - Frame failure modes by blast radius: component → AZ → Region.
+- Distinguish systemic gaps (same root cause × N resources) from isolated issues.
+- Flag false-positive stateless classifications on clearly stateful workloads.
+- Include AWS documentation links for each recommended service action.
 
 ## Troubleshooting
 
@@ -75,10 +108,15 @@ This power provides three skills:
 - Unknown service/operation → next-gen API not yet exposed through the managed server; fall back to console instructions.
 - Assessment stuck / empty results → dependency discovery runs asynchronously; poll assessment status until COMPLETED before reading results.
 - ARC routing-control change has no effect → confirm you targeted the **data plane** endpoint (region-specific), not the control plane.
+- aws-docs or aws-repost not responding → these are optional enrichment servers. Continue with aws-mcp for core operations and note that documentation references may be limited.
 
 ## License and support
 
-This power is licensed under MIT (SPDX: `MIT`). It integrates with the AWS MCP Server (`mcp-proxy-for-aws`, SPDX: `Apache-2.0`), a managed AWS service.
+This power is licensed under MIT (SPDX: `MIT`). It integrates with:
+- AWS MCP Server (`mcp-proxy-for-aws`, SPDX: `Apache-2.0`)
+- AWS Documentation MCP Server (`awslabs.aws-documentation-mcp-server`, SPDX: `Apache-2.0`)
+- AWS re:Post MCP Server (`awslabs.aws-repost-mcp-server`, SPDX: `Apache-2.0`)
+
 - [Privacy Policy](https://aws.amazon.com/privacy/)
-- [Support](mailto:rachapudivishnu9@gmail.com) (rachapudivishnu9@gmail.com) · [GitHub Issues](https://github.com/aquavis12/power-aws-resilience-hub/issues)
+- [Support](mailto:rachapudivishnu9@gmail.com) · [GitHub Issues](https://github.com/aquavis12/power-aws-resilience-hub/issues)
 - Author: Venkata Pavan Vishnu Rachapudi — AWS Community Builder (Security)

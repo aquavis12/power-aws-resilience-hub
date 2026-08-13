@@ -12,6 +12,12 @@ Next-generation Resilience Hub (GA May 2026) introduces:
 
 Because this is newly GA, always **discover operation names** via `aws-mcp` before calling. If an operation isn't exposed yet, fall back to the console (Resilience Hub → Manage / Assess / Report).
 
+## MCP servers available
+
+- **aws-mcp** — All Resilience Hub API operations (assessments, apps, policies, recommendations).
+- **aws-docs** — Pull AWS documentation for remediation guidance, service features, and console navigation paths. Use this to back up every recommendation with authoritative links.
+- **aws-repost** — Search community solutions, known issues, and real-world patterns. Use this before recommending a remediation path to surface gotchas.
+
 ## Workflow
 
 ### 1. Onboard the application
@@ -27,13 +33,21 @@ Because this is newly GA, always **discover operation names** via `aws-mcp` befo
 - Read back: assessed RTO/RPO per component vs target, and the GenAI-identified failure modes.
 
 ### 4. Report (required format)
-Produce a table: `Component | Assessed RTO/RPO | Target | Gap | Failure mode | Recommended fix | WAF BP`.
+Produce a table: `Component | Assessed RTO/RPO | Target | Gap | Failure mode | Recommended fix | WAF BP | AWS Doc Link`.
 - Map every recommended fix to a remediating service and a Well-Architected Reliability best-practice ID (see `steering/wa-reliability.md`).
+- Use `aws-docs` to fetch the relevant documentation page for each recommended service action.
+- Use `aws-repost` to check for community-reported gotchas with the recommended fix.
 - Order recommendations by blast radius (Region > AZ > component) then by gap size.
 
-### 5. (Optional) CI/CD gate
+### 5. Cross-reference with live infrastructure
+- Validate the assessment scope against live resources using `aws-mcp`.
+- Flag resources that exist but are NOT in the assessment (tag-based Resource Groups often miss resources).
+- Flag assessed resources that no longer exist (drift).
+
+### 6. (Optional) CI/CD gate
 Wire the assessment into a pipeline: fail the build if assessed RTO/RPO regresses below policy. This turns resilience into a release gate rather than an audit afterthought.
 
 ## Guardrails
 - Read/assess only. Never modify workload infrastructure to "fix" a finding — surface the recommendation and let the user act.
 - If dependency discovery reports zero dependencies for a non-trivial app, treat it as a discovery failure, not a clean bill of health.
+- Use `aws-docs` and `aws-repost` for authoritative guidance — never invent remediation steps.

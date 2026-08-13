@@ -1,6 +1,6 @@
 ---
 name: assess
-description: Run a Resilience Hub assessment for your AWS application — validates RTO/RPO targets, discovers dependencies, and reports failure modes with remediation recommendations.
+description: Run a Resilience Hub assessment for your AWS application — validates RTO/RPO targets, discovers dependencies, and reports failure modes with remediation recommendations enriched by AWS documentation and community knowledge.
 ---
 
 # Run Resilience Assessment
@@ -26,13 +26,27 @@ List registered Resilience Hub applications. If one exists, confirm with the use
 - Poll the assessment status until COMPLETED (it runs asynchronously).
 - Do NOT read results early — wait for completion.
 
-## Step 5: Report results
+## Step 5: Cross-reference with live infrastructure
 
-Produce a table with columns: `Component | Assessed RTO/RPO | Target | Gap | Failure mode | Recommended fix | WAF BP`
+- Validate the assessment scope against live resources using `aws-mcp`.
+- Flag resources that exist in the account but are NOT in the assessment scope (tag-based Resource Groups often miss resources).
+- Flag assessed resources that no longer exist (configuration drift).
+
+## Step 6: Enrich with documentation
+
+- Use `aws-docs` to fetch authoritative documentation for each recommended remediation action.
+- Use `aws-repost` to check for community-reported gotchas, known issues, and real-world patterns related to the findings.
+
+## Step 7: Report results
+
+Produce a table with columns: `Component | Assessed RTO/RPO | Target | Gap | Failure mode | Recommended fix | WAF BP | Doc Link`
 
 Rules:
 - Map every recommendation to a remediating service (ARC / DRS / Backup) AND a Well-Architected Reliability best-practice ID (e.g. REL11-BP04).
+- Include estimated monthly cost from Resilience Hub's recommendation engine where available.
 - Order by blast radius (Region > AZ > component), then by gap size.
+- Distinguish systemic gaps (same root cause × N resources) from isolated issues.
+- Flag false-positive "stateless" classifications on clearly stateful workloads.
 - Never modify workload infrastructure — only surface recommendations.
 
 ## Guardrails
@@ -40,3 +54,4 @@ Rules:
 - Read/assess only. Never create, modify, or delete workload infrastructure.
 - If dependency discovery reports zero dependencies for a non-trivial app, flag it as a discovery failure.
 - Express all targets as explicit RTO/RPO numbers tied to a DR strategy tier.
+- Use `aws-docs` and `aws-repost` for authoritative guidance — never invent remediation steps.

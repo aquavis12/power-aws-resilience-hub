@@ -9,6 +9,12 @@ Routing-control state changes and zonal shifts **move production traffic**. Befo
 3. Get explicit "yes" confirmation. Never flip a control on your own initiative.
 4. Prefer reading readiness checks and doing dry-runs first.
 
+## MCP servers available
+
+- **aws-mcp** — All ARC API operations (routing controls, readiness checks, zonal shifts) via data-plane and control-plane endpoints.
+- **aws-docs** — Pull ARC documentation for safety rules, data-plane endpoint references, and zonal-shift best practices.
+- **aws-repost** — Search for community experiences with ARC failover, known timing issues, and rollback patterns.
+
 ## The three ARC capabilities
 
 ### 1. Zonal shift (AZ impairment)
@@ -31,11 +37,13 @@ Routing-control state changes and zonal shifts **move production traffic**. Befo
 
 ## Workflow
 1. Read current routing-control / readiness state (data plane).
-2. Confirm target state with the user (see CRITICAL SAFETY).
-3. Execute the smallest sufficient action: zonal shift (AZ) < routing control (Region) < Region switch (full).
-4. Verify traffic moved (health checks, target-group health).
-5. Report: action taken, resources affected, new state, and the rollback command.
+2. Use `aws-docs` to confirm the correct data-plane endpoint format for the target region.
+3. Confirm target state with the user (see CRITICAL SAFETY).
+4. Execute the smallest sufficient action: zonal shift (AZ) < routing control (Region) < Region switch (full).
+5. Verify traffic moved (health checks, target-group health).
+6. Report: action taken, resources affected, new state, and the rollback command.
 
 ## Guardrails
 - Never leave routing controls in an inconsistent state — verify safety rules exist.
 - Never trigger Region switch without a tested plan and user confirmation.
+- Always use data-plane endpoints, not control-plane APIs.

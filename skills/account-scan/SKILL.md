@@ -1,6 +1,6 @@
 ---
 name: account-scan
-description: Perform an account-wide resilience assessment across all regions — discover all Resilience Hub apps, assess each, and produce an aggregated posture report.
+description: Perform an account-wide resilience assessment across all regions — discover all Resilience Hub apps, assess each, flag unregistered workloads, and produce an aggregated posture report enriched with AWS documentation and community knowledge.
 ---
 
 # Account-Wide Resilience Assessment
@@ -36,7 +36,13 @@ Use `aws-mcp` to list resources that exist in the account but are NOT registered
 - Compare against registered apps.
 - Flag unregistered workloads as potential gaps.
 
-## Step 5: Produce aggregated report
+## Step 5: Enrich with documentation and community knowledge
+
+- Use `aws-docs` to pull documentation for each recommended remediation service.
+- Use `aws-repost` to search for community patterns related to common findings (e.g., "DynamoDB PITR restore time", "S3 CRR setup gotchas").
+- Include relevant documentation links in the final report.
+
+## Step 6: Produce aggregated report
 
 Generate a report with:
 
@@ -47,7 +53,7 @@ Generate a report with:
 
 ### Per-App Detail (ordered by severity)
 ```
-| App Name | Region | Score | Worst Breach | Gap | DR Tier | Fix | WAF BP |
+| App Name | Region | Score | Worst Breach | Gap | DR Tier | Fix | WAF BP | Doc Link |
 ```
 
 ### Cross-Region Observations
@@ -56,11 +62,11 @@ Generate a report with:
 - Region pairs that share a failure domain (e.g., same AZ naming)
 
 ### Recommendations (ordered by blast radius)
-Every recommendation must include: DR tier + target RTO/RPO + remediating service + WAF best-practice ID.
+Every recommendation must include: DR tier + target RTO/RPO + remediating service + WAF best-practice ID + estimated cost + documentation link.
 
-## Step 6: Save report
+## Step 7: Save report
 
-Save the report to `resilience-context/account-assessment-{account-id}-{date}.md`.
+Save the report to `resilience-context/account-posture-report-{account-id}-{date}.md`.
 
 ## Region handling
 
@@ -74,3 +80,4 @@ The `aws-mcp` proxy inherits the region from your AWS CLI configuration (`AWS_RE
 - If a region returns AccessDenied, note it and continue with other regions (not all regions may be enabled).
 - Rate-limit assessments — don't trigger more than 5 concurrent assessments to avoid throttling.
 - For organization-wide (multi-account) scanning, the user needs a delegated admin role. Confirm this before attempting cross-account calls.
+- Use `aws-docs` and `aws-repost` for authoritative guidance — never invent remediation steps.

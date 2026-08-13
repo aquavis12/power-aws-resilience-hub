@@ -1,7 +1,7 @@
 {
   "name": "aws-resilience-hub",
-  "version": "1.0.0",
-  "description": "Assess, improve, and govern the resilience of AWS applications from your IDE — next-gen Resilience Hub GenAI failure-mode assessments, dependency discovery, RTO/RPO policy validation, Amazon Application Recovery Controller (ARC) failover orchestration, and AWS Well-Architected Reliability-pillar guidance.",
+  "version": "3.0.0",
+  "description": "Assess, improve, and govern the resilience of AWS applications from your IDE — next-gen Resilience Hub GenAI failure-mode assessments, dependency discovery, RTO/RPO policy validation, structured remediation reporting, Amazon Application Recovery Controller (ARC) failover orchestration, and AWS Well-Architected Reliability-pillar guidance — powered by the managed AWS MCP Server with integrated AWS Documentation and re:Post knowledge.",
   "author": {
     "name": "Venkata Pavan Vishnu Rachapudi",
     "email": "rachapudivishnu9@gmail.com",
@@ -23,7 +23,15 @@
     "well-architected",
     "high availability",
     "resiliency",
-    "failure mode"
+    "failure mode",
+    "backup",
+    "recovery",
+    "report",
+    "assessment",
+    "remediation",
+    "pitr",
+    "multi-az",
+    "cross-region"
   ],
   "homepage": "https://github.com/aquavis12/power-aws-resilience-hub",
   "repository": "https://github.com/aquavis12/power-aws-resilience-hub",
