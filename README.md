@@ -46,10 +46,12 @@ Add Custom Power → **Import power from GitHub** → paste the repo URL.
 power-aws-resilience-hub/
 ├── plugin.json                           # Agent Plugins manifest (name, keywords, author)
 ├── POWER.md                              # Agent instructions, ground rules, onboarding
-├── mcp.json                              # AWS MCP server (aws-mcp) config
+├── mcp.json                              # AWS MCP server (aws-mcp) config — region NOT hardcoded
 ├── skills/
 │   ├── assess/
-│   │   └── SKILL.md                      # Run resilience assessment workflow
+│   │   └── SKILL.md                      # Run resilience assessment for a single app
+│   ├── account-scan/
+│   │   └── SKILL.md                      # Account-wide multi-region resilience scan
 │   └── failover/
 │       └── SKILL.md                      # ARC failover orchestration with safety
 ├── dev.kiro/

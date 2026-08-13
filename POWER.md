@@ -37,15 +37,22 @@ Before using this power, ensure the following:
 
 Discover `resiliencehub` (and `arc` / `route53-recovery-*`) operations via the `aws-mcp` tools. Confirm the caller has resilience read permissions, then check whether an application is already registered (list-apps) before offering to onboard one.
 
+For account-wide scans, ask the user which regions to cover (or offer to scan all enabled regions). The agent will iterate per-region using the `--region` parameter on each API call.
+
 ### Step 3: Set up workspace state
 
 Capture the resilience app ARN, region(s), resilience policy tier, and target RTO/RPO into `.kiro/resilience-hub.json`. Copy `context-templates/` into the user's workspace as `resilience-context/` and offer to help fill the placeholders (workload tier, RTO/RPO targets, dependency inventory).
 
+## Region handling
+
+This power does NOT hardcode a region. The `aws-mcp` proxy inherits the region from your AWS CLI configuration (`AWS_REGION`, `AWS_DEFAULT_REGION`, or profile default). To target a specific region, pass `--region` in each API call. For account-wide scans, the agent iterates across all user-specified regions automatically.
+
 ## Skills
 
-This power provides two skills:
+This power provides three skills:
 
-- **assess** — Run a full Resilience Hub assessment: validate session, discover operations, onboard or select an app, run assessment, and report results as a structured table with WAF best-practice IDs.
+- **assess** — Run a full Resilience Hub assessment for a single application: validate session, discover operations, onboard or select an app, run assessment, and report results as a structured table with WAF best-practice IDs.
+- **account-scan** — Perform an account-wide resilience assessment across all (or selected) regions: discover all registered apps, assess each, flag unregistered workloads, and produce an aggregated posture report.
 - **failover** — Orchestrate ARC failover with safety guardrails: zonal shift, routing controls, or Region switch with explicit user confirmation.
 
 ## Best Practices
