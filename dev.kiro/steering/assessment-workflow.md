@@ -17,6 +17,7 @@ Because this is newly GA, always **discover operation names** via `aws-mcp` befo
 - **aws-mcp** — All Resilience Hub API operations (assessments, apps, policies, recommendations).
 - **aws-docs** — Pull AWS documentation for remediation guidance, service features, and console navigation paths. Use this to back up every recommendation with authoritative links.
 - **aws-repost** — Search community solutions, known issues, and real-world patterns. Use this before recommending a remediation path to surface gotchas.
+- **aws-pricing** — Query the AWS Price List API for live cost data. Use this to validate Resilience Hub's cost estimates and provide unit-level pricing breakdowns (e.g., NAT Gateway hourly cost, EBS snapshot per-GB cost, S3 backup per-GB cost).
 
 ## Workflow
 
