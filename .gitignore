@@ -2,8 +2,6 @@
 .kiro/
 resilience-context/
 
-# dev.kiro/ is intentionally tracked — it contains power steering files
-
 # OS / editor cruft
 .DS_Store
 Thumbs.db
