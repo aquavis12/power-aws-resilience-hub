@@ -103,6 +103,12 @@ Read/assess by default. Failover actions (ARC routing controls, zonal shift) mov
 - Cross-infrastructure validation catching tag-filter gaps
 - Enhanced steering with docs/rePost enrichment guidance
 
+## Privacy & Support
+
+- [Privacy Policy](https://aws.amazon.com/privacy/)
+- [Support / Issues](https://github.com/aquavis12/power-aws-resilience-hub/issues)
+- Contact: [rachapudivishnu9@gmail.com](mailto:rachapudivishnu9@gmail.com)
+
 ## License
 
 MIT
